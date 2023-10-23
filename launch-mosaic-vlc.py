@@ -1,37 +1,73 @@
 import json
 import os
 from PIL import Image, ImageDraw
-#from PIL import Image, ImageDraw, ImageFont
+from sys import platform
 
-mosaicFilename = 'mosaic-vlm-test.conf'
+mosaicConfFilename = 'mosaic-vlm.conf'
 mosaicImageFilename = 'background.png'
 mosaicExecuteFileWin = 'executeMosaicStreaming.bat'
+mosaicExecuteFileLin = 'executeMosaicStreaming'
 mosaicExecuteFileLinux = 'executeMosaicStreaming'
+osPlatform = 'WIN'
+fullFilePath = ''
+dir_path = os.path.dirname(os.path.realpath(__file__))
+fullFilePath = dir_path + "\\" + mosaicImageFilename
+print(fullFilePath)
 
-def createExecuteFile(list):
-    dir_path = os.path.dirname(os.path.realpath(__file__))
+mosaicImageFullFilePath = ''
+mosaicConfFullFilePath = ''
+
+if platform == "linux" or platform == "linux2":
+    osPlatform = 'LIN'
+    fullFilePath = dir_path + '/' + mosaicExecuteFileLin
+    mosaicImageFullFilePath = dir_path + '/' + mosaicImageFilename
+    mosaicConfFullFilePath = dir_path + '/' + mosaicConfFilename
+
+elif platform == "darwin":
+    osPlatform = 'LIN'
+    fullFilePath = dir_path + '/' + mosaicExecuteFileLin
+    mosaicImageFullFilePath = dir_path + '/' + mosaicImageFilename
+    mosaicConfFullFilePath = dir_path + '/' + mosaicConfFilename
+elif platform == "win32":
+    osPlatform = 'WIN'
     fullFilePath = dir_path + '\\' + mosaicExecuteFileWin
-    print(fullFilePath)
-    try:
-        if os.path.exists(fullFilePath):
-            os.remove(fullFilePath)
-    except Exception as e:
-        print("No file exist")
+    mosaicImageFullFilePath = dir_path + '\\' + mosaicImageFilename
+    mosaicConfFullFilePath = dir_path + '\\' + mosaicConfFilename
         
-    vlcLocation = list['mosaic']['vlc-location']
-    executeCmd = "\"" + vlcLocation + "\\vlc.exe\"" +  " --image-duration -1 --vlm-conf " +  mosaicFilename
+def createExecuteFile(list):
+    if(osPlatform == 'WIN'):
+        print(fullFilePath)
+        try:
+            if os.path.exists(fullFilePath):
+                os.remove(fullFilePath)
+        except Exception as e:
+            print("No file exist")
+            
+        vlcLocation = list['mosaic']['vlc-location']
+        executeCmd = "\"" + vlcLocation + "\\vlc.exe\"" +  " --image-duration -1 --vlm-conf " +  mosaicConfFilename   
+    elif(osPlatform == 'LIN'):
+        print(fullFilePath)
+        try:
+            if os.path.exists(fullFilePath):
+                os.remove(fullFilePath)
+        except Exception as e:
+            print("No file exist")
+            
+        vlcLocation = list['mosaic']['vlc-location']
+        executeCmd = "\"" + vlcLocation + "/vlc\"" +  " --image-duration -1 --vlm-conf " +  mosaicConfFilename   
+    else:
+        print("Error: Cannot determine OS")
+        
     file = open(fullFilePath, "a")
     file.write(executeCmd)
-    file.close
+    file.close    
     
 
 def createImageFile(list):
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    fullFilePath = dir_path + "\\" + mosaicImageFilename
-    print(fullFilePath)
+    print(mosaicImageFullFilePath)
     try:
-        if os.path.exists(fullFilePath):
-            os.remove(fullFilePath)
+        if os.path.exists(mosaicImageFullFilePath):
+            os.remove(mosaicImageFullFilePath)
     except Exception as e:
         print("No file exist")
         
@@ -39,26 +75,22 @@ def createImageFile(list):
     height = list['mosaic']['pixels-vertical']
     
     img = Image.new(mode="RGB", size=(int(width), int(height)), color='#000000')
-    img.save(fullFilePath)
+    img.save(mosaicImageFullFilePath)
 
 def createMosaicConfigFile(list):
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    fullFilePath = dir_path + '\\' + mosaicFilename
-    print(fullFilePath)
+    print(mosaicConfFullFilePath)
     try:
-        if os.path.exists(fullFilePath):
-            os.remove(fullFilePath)
+        if os.path.exists(mosaicConfFullFilePath):
+            os.remove(mosaicConfFullFilePath)
     except Exception as e:
         print("No file exist")
     
     print("Opening file")
-    #print(list)
-    
     
     counter = 1
     order_str = ""
     launch_list = []
-    file = open(fullFilePath, "a")
+    file = open(mosaicConfFullFilePath, "a")
     
     
     file.write("### VLC (VLM) configuration: Tile mosaic IP Camera  ###\r\n")
@@ -93,7 +125,10 @@ def createMosaicConfigFile(list):
     file.write("## Background ##\r\n")  
     file.write("new background broadcast enabled\r\n")
     file.write("setup background option image-fps=12/1\r\n")
-    file.write("setup background input " + "\"" +  dir_path + "\\background.png\"\r\n")
+    if(osPlatform == 'WIN'):
+        file.write("setup background input " + "\"" +  dir_path + "\\background.png\"\r\n")
+    if(osPlatform == 'LIN'):
+        file.write("setup background input " + "\"" +  dir_path + "/background.png\"\r\n")
     file.write("setup background output #transcode{sfilter=mosaic{width=2560,height=1440,rows=3,cols=2,borderw=2,borderh=2,position=1," + order_str + "},vcodec=mp4v}:display\r\n")
     
     file.write("\r\n\r\n")
