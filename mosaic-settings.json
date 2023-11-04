@@ -1,6 +1,10 @@
 {"mosaic": {
   "pixels-horizontal": "1920",
   "pixels-vertical": "1080",
+  "videoCodec": "",
+  "audioCodec": "",
+  "fps": "12/1",
+  "delay": "600",
   "vlc-location": "C:\\Program Files\\VideoLAN\\VLC",
   "ipcitem": [
       {"protocol": "rtsp-tcp=enabled", "url": "rtsp://192.168.0.28:80/ch0_0.264", "username": "", "password" : ""},
@@ -9,4 +13,7 @@
       {"protocol": "rtsp-tcp=enabled", "url": "rtsp://192.168.0.28:80/ch3_0.264", "username": "", "password" : ""},
       {"protocol": "rtsp-tcp=enabled", "url": "rtsp://192.168.0.28:80/ch4_0.264", "username": "", "password" : ""}
     ]
+},
+"app": {
+  "debug":"True"
 }}

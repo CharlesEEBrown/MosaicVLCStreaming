@@ -1,0 +1,6 @@
+tmp/*
+*.png
+*.bat
+mosaic-settings.json
+*.conf
+*.info
