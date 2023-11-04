@@ -1,8 +1,15 @@
 {"mosaic": {
-  "pixels-horizontal": "",
-  "pixels-vertical": "",
+  "pixels-horizontal": "1280",
+  "pixels-vertical": "720",
+  "videoCodec": "mp4v",
+  "audioCodec": "mp4v",
+  "fps": "12/1",
+  "delay": "600",
   "vlc-location": "/usr/bin",
   "ipcitem": [
       {"protocol": "", "url": "", "username": "", "password" : ""},
     ]
+},
+"app": {
+  "debug":"False"
 }}
