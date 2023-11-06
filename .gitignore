@@ -1,5 +1,7 @@
 */tmp/*
 tmp/*
+python*/*
+*__py*/*
 *.png
 *.bat
 mosaic-settings.json
