@@ -136,6 +136,7 @@ def createMosaicConfigFile(list):
         file.write("setup " + ipcCount + " output #duplicate{dst=mosaic-bridge{id=" + str(counter) + "},select=video}\r\n")
         file.write("\r\n\r\n")
         
+        # Build ordering command
         if(counter == 1):
             order_str = "order=\"1"
         else:
@@ -144,9 +145,16 @@ def createMosaicConfigFile(list):
         launch_list.append("control Channel" + str(counter) + " play\r\n")
         
         counter = counter + 1
-
-    order_str = order_str + "\""
     
+    # Close quotations for ordering command
+    order_str = order_str + "\""
+
+    if(list['mosaic']['order'] != "-1"):
+        order_str = "order=\""
+        order_str = order_str + list['mosaic']['order']
+        order_str = order_str + "\""
+        print(order_str)
+
     file.write("## Background ##\r\n")  
     file.write("new background broadcast enabled\r\n")
     file.write("setup background option image-fps=" + fps + "\r\n")

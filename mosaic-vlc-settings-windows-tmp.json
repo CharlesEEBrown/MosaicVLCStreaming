@@ -6,6 +6,7 @@
   "fps": "12/1",
   "delay": "600",
   "vlc-location": "C:\\Program Files\\VideoLAN\\VLC",
+  "order": "-1",
   "ipcitem": [
         {"protocol": "", "url": "", "username": "", "password" : ""},
     ]
